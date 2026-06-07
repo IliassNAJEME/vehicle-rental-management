@@ -1,0 +1,118 @@
+@model concessionnaireVoituesGrA.Models.VoitureDto
+
+@{
+    ViewData["Title"] = "Modifier la Voiture";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="d-flex align-items-center mb-4">
+            <div class="bg-primary bg-opacity-25 p-3 rounded-circle me-3">
+                <i class="fa-solid fa-pen-to-square text-primary fs-4"></i>
+            </div>
+            <div>
+                <h2 class="text-white fw-bold mb-0">Modifier la Voiture</h2>
+                <p class="text-muted mb-0">Mettez à jour les informations du véhicule @Model.Matricule.</p>
+            </div>
+        </div>
+
+        <div class="glass p-5 rounded-4 shadow-lg position-relative overflow-hidden">
+            <div class="position-absolute top-0 end-0 p-4 opacity-10">
+                <i class="fa-solid fa-car-side fa-10x"></i>
+            </div>
+            
+            <form asp-action="Edit" enctype="multipart/form-data" class="position-relative z-index-1">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger shadow-sm rounded-3"></div>
+                <input type="hidden" asp-for="Matricule" />
+                <input type="hidden" asp-for="EtatDisponibilite" />
+                
+                @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+                {
+                    <div class="alert alert-danger shadow-sm rounded-3 border-0 bg-danger bg-opacity-10 text-danger mb-4">
+                        <i class="fa-solid fa-triangle-exclamation me-2"></i> @ViewBag.ErrorMessage
+                    </div>
+                }
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="form-group mb-0">
+                            <label asp-for="Marque" class="control-label text-uppercase small tracking-wide text-muted fw-bold mb-2"><i class="fa-solid fa-tag me-1"></i> Marque</label>
+                            <input asp-for="Marque" class="form-control form-control-lg bg-dark bg-opacity-50 text-white border-secondary" placeholder="Ex: BMW" />
+                            <span asp-validation-for="Marque" class="text-danger small mt-1 d-block"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-0">
+                            <label asp-for="Modele" class="control-label text-uppercase small tracking-wide text-muted fw-bold mb-2"><i class="fa-solid fa-car me-1"></i> Modèle</label>
+                            <input asp-for="Modele" class="form-control form-control-lg bg-dark bg-opacity-50 text-white border-secondary" placeholder="Ex: Serie 3" />
+                            <span asp-validation-for="Modele" class="text-danger small mt-1 d-block"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-0">
+                            <label asp-for="Categorie" class="control-label text-uppercase small tracking-wide text-muted fw-bold mb-2"><i class="fa-solid fa-layer-group me-1"></i> Catégorie</label>
+                            <select asp-for="Categorie" class="form-select form-select-lg bg-dark bg-opacity-50 text-white border-secondary">
+                                <option value="">-- Choisir une catégorie --</option>
+                                <option value="Berline">Berline</option>
+                                <option value="SUV">SUV</option>
+                                <option value="Citadine">Citadine</option>
+                                <option value="Sport">Sport</option>
+                                <option value="Utilitaire">Utilitaire</option>
+                                <option value="Luxe">Luxe</option>
+                            </select>
+                            <span asp-validation-for="Categorie" class="text-danger small mt-1 d-block"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-0">
+                            <label asp-for="Annee" class="control-label text-uppercase small tracking-wide text-muted fw-bold mb-2"><i class="fa-regular fa-calendar me-1"></i> Année</label>
+                            <input asp-for="Annee" class="form-control form-control-lg bg-dark bg-opacity-50 text-white border-secondary" placeholder="Ex: 2024" />
+                            <span asp-validation-for="Annee" class="text-danger small mt-1 d-block"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-0">
+                            <label asp-for="PrixLocation" class="control-label text-uppercase small tracking-wide text-muted fw-bold mb-2"><i class="fa-solid fa-money-bill-wave me-1"></i> Prix/Jour (MAD)</label>
+                            <input asp-for="PrixLocation" class="form-control form-control-lg bg-dark bg-opacity-50 text-white border-secondary" placeholder="0.00" />
+                            <span asp-validation-for="PrixLocation" class="text-danger small mt-1 d-block"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group mb-0">
+                            <label asp-for="ImageFile" class="control-label text-uppercase small tracking-wide text-muted fw-bold mb-2"><i class="fa-regular fa-image me-1"></i> Nouvelle Image (Optionnel)</label>
+                            <div class="d-flex align-items-center mb-3">
+                                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                                {
+                                    <img src="@Model.ImageUrl" alt="Image actuelle" class="rounded-3 me-3 border border-secondary" style="width: 80px; height: 50px; object-fit: cover;" />
+                                    <span class="text-muted small">Laissez vide pour conserver l'image actuelle.</span>
+                                }
+                            </div>
+                            <input asp-for="ImageFile" type="file" class="form-control form-control-lg bg-dark bg-opacity-50 text-white border-secondary" accept="image/*" />
+                            <span asp-validation-for="ImageFile" class="text-danger small mt-1 d-block"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-secondary opacity-25 my-5" />
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <a asp-action="Index" class="btn btn-secondary px-4 py-2 rounded-pill shadow-sm">
+                        <i class="fa-solid fa-arrow-left me-2"></i> Retour
+                    </a>
+                    <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill shadow-lg fw-bold fs-5">
+                        <i class="fa-solid fa-check me-2"></i> Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

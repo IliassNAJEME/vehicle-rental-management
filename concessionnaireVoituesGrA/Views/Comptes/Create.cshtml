@@ -1,0 +1,53 @@
+@model concessionnaireVoituesGrA.Models.CompteDto
+
+@{
+    ViewData["Title"] = "Inscription";
+}
+
+<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-md-5">
+        <div class="glass p-5 text-center">
+            <h2 class="text-white fw-bold mb-2">Rejoignez-nous</h2>
+            <p class="text-muted mb-4">Créez votre compte pour réserver votre véhicule</p>
+
+            @if (ViewBag.MessageErreur != null)
+            {
+                <div class="alert alert-danger bg-transparent border-danger text-danger mb-4">
+                    <i class="fa-solid fa-triangle-exclamation me-2"></i> @ViewBag.MessageErreur
+                </div>
+            }
+
+            <form asp-action="Create">
+                <div class="mb-4 text-start">
+                    <label asp-for="Username" class="form-label">Nom d'utilisateur</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-secondary text-muted"><i class="fa-solid fa-user"></i></span>
+                        <input asp-for="Username" class="form-control bg-transparent text-white border-secondary" placeholder="Choisissez un pseudo" required />
+                    </div>
+                </div>
+
+                <div class="mb-5 text-start">
+                    <label asp-for="Password" class="form-label">Mot de passe</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-secondary text-muted"><i class="fa-solid fa-lock"></i></span>
+                        <input asp-for="Password" type="password" class="form-control bg-transparent text-white border-secondary" placeholder="Créez un mot de passe" required />
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn-primary w-100">
+                        <i class="fa-solid fa-user-plus me-2"></i> Créer le compte
+                    </button>
+                </div>
+                
+                <div class="mt-4 text-center">
+                    <p class="text-muted small">Vous avez déjà un compte ? <a asp-action="Authentifier" class="text-gradient text-decoration-none fw-bold">Se connecter</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

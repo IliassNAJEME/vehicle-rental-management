@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="concessionnaireVoituesGrA/concessionnaireVoituesGrA.csproj" />
+  <Project Path="reactproject1/reactproject1.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+</Solution>

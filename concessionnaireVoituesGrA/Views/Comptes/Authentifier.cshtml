@@ -1,0 +1,79 @@
+﻿@model concessionnaireVoituesGrA.Models.CompteDto
+@{ ViewData["Title"] = "Connexion"; Layout = "_Layout"; }
+
+<div style="min-height:85vh;display:flex;align-items:center;justify-content:center;padding:2rem;">
+<div style="width:100%;max-width:440px;">
+
+    <div style="text-align:center;margin-bottom:2.5rem;">
+        <div style="width:56px;height:56px;background:linear-gradient(135deg,var(--color-primary-600),#7C3AED);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+            <i class="fa-solid fa-car-side" style="color:#fff;font-size:1.4rem;"></i>
+        </div>
+        <h1 style="font-family:var(--font-display);font-size:1.8rem;font-weight:800;color:#fff;margin:0;">Bon retour !</h1>
+        <p style="color:var(--color-surface-400);margin:.5rem 0 0;font-size:.95rem;">Connectez-vous a votre espace RentACar</p>
+    </div>
+
+    <div class="glass-panel" style="padding:2rem;">
+        @if (ViewBag.MessageErreur != null)
+        {
+            <div class="alert-danger p-3 mb-4" style="border-radius:10px;display:flex;align-items:center;gap:10px;">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span style="font-size:.88rem;">@ViewBag.MessageErreur</span>
+            </div>
+        }
+
+        <form asp-action="Authentifier" method="post">
+            @Html.AntiForgeryToken()
+            <div class="mb-4">
+                <label class="form-label" for="login-username">
+                    <i class="fa-regular fa-user me-1" style="color:var(--color-primary-500);"></i> Nom d'utilisateur
+                </label>
+                <input type="text" class="form-control" id="login-username" name="Username" 
+                       placeholder="Votre nom d'utilisateur" autocomplete="username" required autofocus />
+            </div>
+            <div class="mb-5">
+                <label class="form-label" for="login-password">
+                    <i class="fa-solid fa-lock me-1" style="color:var(--color-primary-500);"></i> Mot de passe
+                </label>
+                <div style="position:relative;">
+                    <input type="password" class="form-control" id="login-password" name="Password"
+                           placeholder="Votre mot de passe" autocomplete="current-password" required style="padding-right:3rem;" />
+                    <button type="button" onclick="togglePwd('login-password',this)" 
+                            style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--color-surface-400);cursor:pointer;padding:4px;">
+                        <i class="fa-regular fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            <button type="submit" class="btn-primary w-100" style="padding:1rem;font-size:1rem;border-radius:var(--radius-md);justify-content:center;">
+                <i class="fa-solid fa-arrow-right-to-bracket me-2"></i> Se connecter
+            </button>
+        </form>
+
+        <div style="text-align:center;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.05);">
+            <p style="font-size:.88rem;color:var(--color-surface-400);margin:0;">
+                Pas encore de compte ?
+                <a asp-action="Creer" style="color:var(--color-primary-400);font-weight:600;"> S'inscrire gratuitement</a>
+            </p>
+        </div>
+    </div>
+
+    <p style="text-align:center;font-size:.75rem;color:var(--color-surface-600);margin-top:1.5rem;">
+        <i class="fa-solid fa-shield-halved me-1"></i> Connexion securisee par chiffrement BCrypt
+    </p>
+</div>
+</div>
+
+@section Scripts {
+<script>
+function togglePwd(id, btn) {
+    var input = document.getElementById(id);
+    var icon = btn.querySelector('i');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fa-regular fa-eye-slash';
+    } else {
+        input.type = 'password';
+        icon.className = 'fa-regular fa-eye';
+    }
+}
+</script>
+}

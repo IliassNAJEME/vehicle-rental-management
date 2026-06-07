@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Location de voitures premium au Maroc. Flotte sélectionnée, réservation instantanée." />
+    <title>@ViewData["Title"] - RentACar Premium</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <header>
+        <nav class="navbar navbar-expand-lg glass-nav" aria-label="Navigation principale">
+            <div class="container">
+                <a class="navbar-brand text-gradient fw-bold" asp-controller="Home" asp-action="Index" aria-label="RentACar Accueil">
+                    <i class="fa-solid fa-car-side me-2"></i>RentACar
+                </a>
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false">
+                    <i class="fa-solid fa-bars" style="color:var(--color-surface-300);"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav flex-grow-1 ms-lg-4 gap-1">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">
+                                <i class="fa-solid fa-grid-2 me-1 opacity-75"></i> Catalogue
+                            </a>
+                        </li>
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item"><a class="nav-link" asp-controller="Admin" asp-action="Index"><i class="fa-solid fa-gauge-high me-1 opacity-75"></i> Dashboard</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="Voitures" asp-action="Index"><i class="fa-solid fa-car me-1 opacity-75"></i> Véhicules</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="Clients" asp-action="Index"><i class="fa-solid fa-users me-1 opacity-75"></i> Clients</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="Comptes" asp-action="Index"><i class="fa-solid fa-user-gear me-1 opacity-75"></i> Comptes</a></li>
+                            }
+                            else if (User.IsInRole("Client"))
+                            {
+                                <li class="nav-item"><a class="nav-link" asp-controller="Locations" asp-action="MesDemandes"><i class="fa-solid fa-clipboard-list me-1 opacity-75"></i> Mes Réservations</a></li>
+                            }
+                        }
+                    </ul>
+                    <ul class="navbar-nav align-items-lg-center gap-2 mt-3 mt-lg-0">
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item d-flex align-items-center" style="gap:8px;">
+                                <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--color-primary-600),#7C3AED);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:0.8rem;flex-shrink:0;">
+                                    @(User.Identity.Name?.Substring(0,1).ToUpper() ?? "U")
+                                </div>
+                                <span style="font-size:0.85rem;font-weight:500;color:var(--color-surface-300);">@User.Identity.Name</span>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn-danger" asp-controller="Comptes" asp-action="Deconnexion" style="font-size:0.8rem;padding:0.4rem 1rem;">
+                                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Déconnexion
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Comptes" asp-action="Authentifier"><i class="fa-regular fa-user me-1"></i> Connexion</a></li>
+                            <li class="nav-item">
+                                <a class="btn-primary" asp-controller="Comptes" asp-action="Creer" style="font-size:0.85rem;padding:0.5rem 1.25rem;">
+                                    <i class="fa-solid fa-rocket"></i> S'inscrire
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ===== TOAST CONTAINER ===== -->
+    <div id="toast-container" aria-live="polite"></div>
+
+    <!-- ===== CONTENT ===== -->
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row align-items-center g-4">
+                <div class="col-md-4">
+                    <span class="text-gradient fw-bold" style="font-family:var(--font-display);font-size:1.2rem;">
+                        <i class="fa-solid fa-car-side me-1"></i>RentACar
+                    </span>
+                    <p style="font-size:0.8rem;margin:4px 0 0;color:var(--color-surface-500);">Location premium au Maroc.</p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <p style="font-size:0.78rem;margin:0;color:var(--color-surface-600);">&copy; 2026 RentACar Premium. Tous droits réservés.</p>
+                </div>
+                <div class="col-md-4 d-flex justify-content-md-end gap-3">
+                    <a href="#" aria-label="Facebook" style="color:var(--color-surface-500);"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Instagram" style="color:var(--color-surface-500);"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" aria-label="WhatsApp" style="color:var(--color-surface-500);"><i class="fa-brands fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- ===== TOAST ENGINE ===== -->
+    <script>
+    (function() {
+        const container = document.getElementById('toast-container');
+        const toasts = [
+            @if (TempData["ToastSuccess"] != null) { <text>{ type:'success', icon:'fa-circle-check', msg: @Json.Serialize(TempData["ToastSuccess"]) },</text> }
+            @if (TempData["ToastError"]   != null) { <text>{ type:'error',   icon:'fa-circle-xmark', msg: @Json.Serialize(TempData["ToastError"])   },</text> }
+            @if (TempData["ToastInfo"]    != null) { <text>{ type:'info',    icon:'fa-circle-info',  msg: @Json.Serialize(TempData["ToastInfo"])    },</text> }
+        ];
+        toasts.forEach(function(t) { showToast(t.type, t.icon, t.msg); });
+
+        function showToast(type, icon, msg) {
+            const el = document.createElement('div');
+            el.className = 'toast-item toast-' + type;
+            el.setAttribute('role', 'alert');
+            el.innerHTML = '<i class="fa-solid ' + icon + '"></i><span>' + msg + '</span><button class="toast-close" aria-label="Fermer"><i class="fa-solid fa-xmark"></i></button>';
+            container.appendChild(el);
+            el.querySelector('.toast-close').onclick = function() { dismiss(el); };
+            setTimeout(function() { dismiss(el); }, 5000);
+        }
+
+        function dismiss(el) {
+            el.classList.add('hiding');
+            setTimeout(function() { el.remove(); }, 300);
+        }
+
+        window.showToast = showToast;
+    })();
+    </script>
+</body>
+</html>

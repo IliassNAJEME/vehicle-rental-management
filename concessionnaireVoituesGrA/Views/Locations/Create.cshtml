@@ -1,0 +1,124 @@
+@model concessionnaireVoituesGrA.Domains.Location
+
+@{
+    ViewData["Title"] = "Réserver";
+    var voiture = ViewBag.Voiture as concessionnaireVoituesGrA.Models.VoitureDto;
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="d-flex align-items-center mb-4">
+            <div class="bg-primary bg-opacity-25 p-3 rounded-circle me-3">
+                <i class="fa-solid fa-key text-primary fs-4"></i>
+            </div>
+            <div>
+                <h2 class="text-white fw-bold mb-0">Demande de <span class="text-gradient">Réservation</span></h2>
+                <p class="text-muted mb-0">Remplissez les dates pour réserver le véhicule sélectionné.</p>
+            </div>
+        </div>
+
+        @if (voiture != null)
+        {
+            <div class="glass p-1 rounded-4 shadow-lg overflow-hidden mb-4">
+                <div class="row g-0">
+                    <div class="col-sm-4 bg-dark bg-opacity-50">
+                        @if (!string.IsNullOrEmpty(voiture.ImageUrl))
+                        {
+                            <img src="@voiture.ImageUrl" alt="@voiture.Marque @voiture.Modele" class="w-100 h-100 object-fit-cover" style="min-height: 160px;" />
+                        }
+                        else
+                        {
+                            <div class="d-flex align-items-center justify-content-center h-100 p-4" style="min-height: 160px;">
+                                <i class="fa-solid fa-car text-muted opacity-25 fa-5x"></i>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-sm-8 p-4 d-flex flex-column justify-content-center">
+                        <h4 class="text-white fw-bold mb-1">@voiture.Marque @voiture.Modele</h4>
+                        <p class="text-muted mb-2"><i class="fa-regular fa-calendar me-1"></i> Modèle @voiture.Annee &bull; Matricule : @voiture.Matricule</p>
+                        <div class="d-inline-block">
+                            <span class="badge bg-primary bg-opacity-25 text-primary fs-6 px-3 py-2 rounded-pill border border-primary border-opacity-25">
+                                <i class="fa-solid fa-money-bill-wave me-1"></i> @voiture.PrixLocation MAD / jour
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="glass p-5 rounded-4 shadow-lg position-relative overflow-hidden mb-4">
+            <div class="position-absolute top-0 end-0 p-4 opacity-10">
+                <i class="fa-regular fa-calendar-check fa-10x"></i>
+            </div>
+
+            <form asp-action="Create" class="position-relative" style="z-index: 1;">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="MatriculeVoiture" value="@voiture?.Matricule" />
+
+                @if (ViewBag.Erreur != null)
+                {
+                    <div class="alert alert-danger shadow-sm rounded-3 border-0 bg-danger bg-opacity-10 text-danger mb-4">
+                        <i class="fa-solid fa-triangle-exclamation me-2"></i> @ViewBag.Erreur
+                    </div>
+                }
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="form-group mb-0">
+                            <label class="control-label text-uppercase small tracking-wide text-muted fw-bold mb-2"><i class="fa-solid fa-plane-arrival me-1"></i> Date de Début</label>
+                            <input type="date" name="DateDebut" class="form-control form-control-lg bg-dark bg-opacity-50 text-white border-secondary" required min="@DateTime.Now.ToString("yyyy-MM-dd")" id="dateDebut" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-0">
+                            <label class="control-label text-uppercase small tracking-wide text-muted fw-bold mb-2"><i class="fa-solid fa-plane-departure me-1"></i> Date de Fin</label>
+                            <input type="date" name="DateFin" class="form-control form-control-lg bg-dark bg-opacity-50 text-white border-secondary" required min="@DateTime.Now.ToString("yyyy-MM-dd")" id="dateFin" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-3 border-top border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="text-muted small text-uppercase tracking-wide">Montant estimé</span>
+                        <h3 class="text-gradient fw-bold mb-0" id="montantEstime">-- MAD</h3>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary px-4 py-2 rounded-pill shadow-sm">
+                            <i class="fa-solid fa-arrow-left me-2"></i> Annuler
+                        </a>
+                        <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill shadow-lg fw-bold fs-5">
+                            <i class="fa-solid fa-paper-plane me-2"></i> Confirmer
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const prixJour = @(voiture?.PrixLocation ?? 0);
+        const inputDebut = document.getElementById('dateDebut');
+        const inputFin = document.getElementById('dateFin');
+        const displayMontant = document.getElementById('montantEstime');
+
+        function calculerMontant() {
+            if(inputDebut.value && inputFin.value) {
+                const start = new Date(inputDebut.value);
+                const end = new Date(inputFin.value);
+                const diffTime = Math.abs(end - start);
+                let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                if (diffDays === 0) diffDays = 1;
+                if (end >= start) {
+                    displayMontant.textContent = (diffDays * prixJour) + ' MAD';
+                } else {
+                    displayMontant.textContent = 'Erreur dates';
+                }
+            }
+        }
+
+        inputDebut.addEventListener('change', calculerMontant);
+        inputFin.addEventListener('change', calculerMontant);
+    </script>
+}

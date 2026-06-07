@@ -1,0 +1,80 @@
+@model IEnumerable<concessionnaireVoituesGrA.Models.VoitureDto>
+
+@{
+    ViewData["Title"] = "Gestion des Voitures";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-5">
+    <div>
+        <h2 class="text-white fw-bold display-5 mb-0">Gestion <span class="text-gradient">Voitures</span></h2>
+        <p class="text-muted lead mt-2">Gérez le catalogue de la concession, ajoutez, modifiez ou supprimez des véhicules.</p>
+    </div>
+    <div>
+        <a asp-action="Create" class="btn btn-primary shadow-lg px-4 py-2 fw-bold" style="border-radius: 50px;">
+            <i class="fa-solid fa-plus me-2"></i> Ajouter une Voiture
+        </a>
+    </div>
+</div>
+
+<div class="glass p-1 rounded-4 overflow-hidden shadow-lg">
+    <div class="table-responsive">
+        <table class="table table-borderless table-hover mb-0 align-middle">
+            <thead class="bg-dark bg-opacity-50">
+                <tr>
+                    <th class="py-3 px-4 text-uppercase text-muted small tracking-wide">Image</th>
+                    <th class="py-3 px-4 text-uppercase text-muted small tracking-wide">Matricule</th>
+                    <th class="py-3 px-4 text-uppercase text-muted small tracking-wide">Véhicule</th>
+                    <th class="py-3 px-4 text-uppercase text-muted small tracking-wide text-center">Année</th>
+                    <th class="py-3 px-4 text-uppercase text-muted small tracking-wide text-end">Prix/Jour</th>
+                    <th class="py-3 px-4 text-uppercase text-muted small tracking-wide text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model) {
+                    <tr class="border-bottom border-secondary border-opacity-25 transition-all">
+                        <td class="py-3 px-4" style="width: 120px;">
+                            <div class="rounded-3 overflow-hidden shadow-sm" style="width: 100px; height: 60px; background: rgba(0,0,0,0.2);">
+                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <img src="@item.ImageUrl" alt="@item.Marque @item.Modele" style="width: 100%; height: 100%; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <div class="d-flex align-items-center justify-content-center h-100">
+                                        <i class="fa-solid fa-car text-muted opacity-50 fs-4"></i>
+                                    </div>
+                                }
+                            </div>
+                        </td>
+                        <td class="py-3 px-4">
+                            <span class="badge bg-secondary bg-opacity-50 text-light px-2 py-1 font-monospace border border-secondary border-opacity-25">@Html.DisplayFor(modelItem => item.Matricule)</span>
+                        </td>
+                        <td class="py-3 px-4">
+                            <div class="fw-bold text-white fs-6">@Html.DisplayFor(modelItem => item.Marque)</div>
+                            <div class="text-muted small">@Html.DisplayFor(modelItem => item.Modele)</div>
+                        </td>
+                        <td class="py-3 px-4 text-center">
+                            <span class="text-light"><i class="fa-regular fa-calendar me-1 opacity-50"></i> @Html.DisplayFor(modelItem => item.Annee)</span>
+                        </td>
+                        <td class="py-3 px-4 text-end">
+                            <span class="fw-bold text-gradient">@Html.DisplayFor(modelItem => item.PrixLocation) MAD</span>
+                        </td>
+                        <td class="py-3 px-4 text-center">
+                            <div class="btn-group shadow-sm">
+                                <a asp-action="Edit" asp-route-id="@item.Matricule" class="btn btn-secondary btn-sm" title="Modifier">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.Matricule" class="btn btn-secondary btn-sm" title="Détails">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Matricule" class="btn btn-danger btn-sm" title="Supprimer">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

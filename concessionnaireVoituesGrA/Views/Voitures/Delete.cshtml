@@ -1,0 +1,65 @@
+@model concessionnaireVoituesGrA.Models.VoitureDto
+
+@{
+    ViewData["Title"] = "Supprimer la Voiture";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="alert alert-danger shadow-sm border-0 bg-danger bg-opacity-10 d-flex align-items-center mb-4 p-4 rounded-4">
+            <i class="fa-solid fa-triangle-exclamation text-danger fa-3x me-4"></i>
+            <div>
+                <h3 class="text-danger fw-bold mb-1">Attention : Action Irréversible !</h3>
+                <p class="text-danger opacity-75 mb-0">Vous êtes sur le point de supprimer définitivement la <strong>@Model.Marque @Model.Modele (@Model.Matricule)</strong> de votre parc automobile.</p>
+            </div>
+        </div>
+
+        <div class="glass p-1 rounded-4 shadow-lg overflow-hidden mb-4 border border-danger border-opacity-25">
+            <div class="row g-0">
+                <div class="col-sm-4 bg-dark bg-opacity-50">
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <img src="@Model.ImageUrl" alt="@Model.Marque @Model.Modele" class="w-100 h-100 object-fit-cover" style="min-height: 200px;" />
+                    }
+                    else
+                    {
+                        <div class="d-flex align-items-center justify-content-center h-100 p-4" style="min-height: 200px;">
+                            <i class="fa-solid fa-car text-muted opacity-25 fa-5x"></i>
+                        </div>
+                    }
+                </div>
+                <div class="col-sm-8 p-4 d-flex flex-column justify-content-center">
+                    <h4 class="text-white fw-bold mb-3">Détails du Véhicule</h4>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="text-uppercase text-muted small fw-bold tracking-wide">Marque</div>
+                            <div class="text-white">@Model.Marque</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-uppercase text-muted small fw-bold tracking-wide">Modèle</div>
+                            <div class="text-white">@Model.Modele</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-uppercase text-muted small fw-bold tracking-wide">Année</div>
+                            <div class="text-white">@Model.Annee</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-uppercase text-muted small fw-bold tracking-wide">Prix de Location</div>
+                            <div class="text-white fw-bold text-gradient">@Model.PrixLocation MAD/jour</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form asp-action="Delete" class="d-flex justify-content-center gap-3">
+            <input type="hidden" asp-for="Matricule" />
+            <a asp-action="Index" class="btn btn-secondary px-5 py-3 rounded-pill shadow-sm fw-bold">
+                <i class="fa-solid fa-arrow-left me-2"></i> Annuler
+            </a>
+            <button type="submit" class="btn btn-danger px-5 py-3 rounded-pill shadow-lg fw-bold fs-5">
+                <i class="fa-solid fa-trash-can me-2"></i> Confirmer la Suppression
+            </button>
+        </form>
+    </div>
+</div>

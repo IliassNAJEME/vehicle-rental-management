@@ -1,0 +1,84 @@
+@model IEnumerable<concessionnaireVoituesGrA.Models.ClientDto>
+
+@{
+    ViewData["Title"] = "Gestion des Clients";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-5">
+    <div>
+        <h2 class="text-white fw-bold display-5 mb-0">Gestion des <span class="text-gradient">Clients</span></h2>
+        <p class="text-muted lead mt-2">Gérez l'ensemble de votre portefeuille client.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary px-4 py-2 rounded-pill shadow-lg d-flex align-items-center">
+        <i class="fa-solid fa-user-plus me-2"></i> Nouveau Client
+    </a>
+</div>
+
+<div class="glass p-1 rounded-4 overflow-hidden shadow-lg">
+    @if (Model != null && Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-borderless table-hover mb-0 align-middle">
+                <thead class="bg-dark bg-opacity-50">
+                    <tr>
+                        <th class="py-3 px-4 text-uppercase text-muted small tracking-wide">Client</th>
+                        <th class="py-3 px-4 text-uppercase text-muted small tracking-wide">CINE</th>
+                        <th class="py-3 px-4 text-uppercase text-muted small tracking-wide">Contact</th>
+                        <th class="py-3 px-4 text-uppercase text-muted small tracking-wide">Adresse</th>
+                        <th class="py-3 px-4 text-uppercase text-muted small tracking-wide text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model) {
+                        <tr class="border-bottom border-secondary border-opacity-25 transition-all">
+                            <td class="py-3 px-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px;">
+                                        <i class="fa-solid fa-user text-primary fs-5"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="text-white fw-bold mb-0">@item.Prenom @item.Nom</h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4">
+                                <span class="badge bg-secondary bg-opacity-50 text-light px-3 py-2 rounded-pill font-monospace shadow-sm">
+                                    <i class="fa-regular fa-id-card me-1"></i> @item.CINE
+                                </span>
+                            </td>
+                            <td class="py-3 px-4">
+                                <div class="text-light small">
+                                    <i class="fa-solid fa-phone text-muted me-2"></i> @item.Tel
+                                </div>
+                            </td>
+                            <td class="py-3 px-4 text-light small">
+                                <i class="fa-solid fa-location-dot text-muted me-2"></i> @item.Adresse
+                            </td>
+                            <td class="py-3 px-4 text-end">
+                                <div class="btn-group shadow-sm">
+                                    <a asp-action="Edit" asp-route-id="@item.CINE" class="btn btn-secondary btn-sm" title="Modifier">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                    <a asp-action="Details" asp-route-id="@item.CINE" class="btn btn-secondary btn-sm" title="Détails">
+                                        <i class="fa-solid fa-eye text-info"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.CINE" class="btn btn-secondary btn-sm" title="Supprimer">
+                                        <i class="fa-solid fa-trash text-danger"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="fa-solid fa-users-slash text-muted fa-4x mb-3 opacity-50"></i>
+            <h4 class="text-white">Aucun client trouvé</h4>
+            <p class="text-muted mb-0">Commencez par ajouter votre premier client.</p>
+        </div>
+    }
+</div>

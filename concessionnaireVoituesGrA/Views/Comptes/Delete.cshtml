@@ -1,0 +1,52 @@
+@model concessionnaireVoituesGrA.Models.CompteDto
+
+@{
+    ViewData["Title"] = "Supprimer un Compte";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="d-flex align-items-center mb-4">
+            <div class="bg-danger bg-opacity-25 p-3 rounded-circle me-3">
+                <i class="fa-solid fa-user-xmark text-danger fs-4"></i>
+            </div>
+            <div>
+                <h2 class="text-white fw-bold mb-0">Supprimer le Compte</h2>
+                <p class="text-muted mb-0">Cette action révoquera les accès de l'utilisateur.</p>
+            </div>
+        </div>
+
+        <div class="alert alert-danger bg-danger bg-opacity-10 border-danger border-opacity-25 shadow-lg rounded-4 p-4 mb-4 d-flex align-items-center">
+            <i class="fa-solid fa-triangle-exclamation fa-3x text-danger opacity-75 me-4"></i>
+            <div>
+                <h4 class="text-danger fw-bold mb-1">Attention Danger !</h4>
+                <p class="text-danger opacity-75 mb-0">Vous êtes sur le point de supprimer le compte d'accès pour <strong>@Model.Username</strong>. Cette opération est définitive.</p>
+            </div>
+        </div>
+
+        <div class="glass p-4 rounded-4 shadow-sm mb-4 text-center">
+            <i class="fa-solid fa-user-shield fa-4x text-muted opacity-50 mb-3"></i>
+            <h3 class="text-white">@Model.Username</h3>
+            @if(Model.Username.ToLower().Contains("admin"))
+            {
+                <span class="badge bg-danger bg-opacity-25 text-danger border border-danger border-opacity-25 px-3 py-2 rounded-pill font-monospace">Administrateur</span>
+            }
+            else
+            {
+                <span class="badge bg-info bg-opacity-25 text-info border border-info border-opacity-25 px-3 py-2 rounded-pill font-monospace">Client</span>
+            }
+        </div>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Username" />
+            <div class="d-flex justify-content-between align-items-center">
+                <a asp-action="Index" class="btn btn-secondary px-4 py-2 rounded-pill shadow-sm">
+                    <i class="fa-solid fa-arrow-left me-2"></i> Annuler
+                </a>
+                <button type="submit" class="btn btn-danger px-5 py-2 rounded-pill shadow-lg fw-bold fs-5">
+                    <i class="fa-solid fa-trash me-2"></i> Confirmer la suppression
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

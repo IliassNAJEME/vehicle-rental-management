@@ -1,0 +1,149 @@
+@model IEnumerable<concessionnaireVoituesGrA.Domains.Location>
+@{
+    ViewData["Title"] = "Mes Reservations";
+    int enAttente = Model.Count(l => l.Statut == "En attente");
+    int validees  = Model.Count(l => l.Statut == "Validee" || l.Statut == "Validée");
+    int refusees  = Model.Count(l => l.Statut == "Refusee" || l.Statut == "Refusée");
+    double total  = Model.Where(l => l.Statut == "Validee" || l.Statut == "Validée").Sum(l => l.MontantTotal);
+}
+
+<div style="padding:2.5rem 0;">
+<div class="container" style="max-width:1100px;">
+
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-4 mb-5">
+        <div>
+            <div class="section-tag"><i class="fa-solid fa-clipboard-list"></i> Espace Client</div>
+            <h1 style="font-family:var(--font-display);font-size:2rem;font-weight:800;margin:0;color:#fff;">
+                Mes <span class="text-gradient">Reservations</span>
+            </h1>
+            <p class="text-muted mt-1 mb-0">Suivez l'etat de toutes vos demandes en temps reel.</p>
+        </div>
+        <a asp-controller="Home" asp-action="Index" class="btn-primary" style="font-size:.9rem;padding:.6rem 1.25rem;">
+            <i class="fa-solid fa-plus"></i> Nouvelle reservation
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <!-- Empty State -->
+        <div class="glass-panel text-center" style="padding:5rem 2rem;">
+            <div style="width:80px;height:80px;background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.2);border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+                <i class="fa-solid fa-car-side fa-2x" style="color:var(--color-primary-400);"></i>
+            </div>
+            <h3 style="font-family:var(--font-display);font-weight:700;color:#fff;margin-bottom:.75rem;">Aucune reservation</h3>
+            <p style="color:var(--color-surface-400);max-width:400px;margin:0 auto 2rem;">
+                Vous n'avez pas encore fait de demande de location. Parcourez notre flotte et reservez votre vehicule ideal !
+            </p>
+            <a asp-controller="Home" asp-action="Index" class="btn-primary" style="font-size:.95rem;padding:.8rem 2rem;">
+                <i class="fa-solid fa-car-side me-2"></i> Voir la flotte
+            </a>
+        </div>
+    }
+    else
+    {
+        <!-- Stats rapides -->
+        <div class="row g-3 mb-5">
+            <div class="col-6 col-md-3">
+                <div class="glass-panel p-3 text-center" style="border-top:2px solid var(--color-primary-500);">
+                    <div style="font-size:1.8rem;font-weight:800;font-family:var(--font-display);color:#fff;">@Model.Count()</div>
+                    <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--color-surface-400);">Total</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="glass-panel p-3 text-center" style="border-top:2px solid #FBBF24;">
+                    <div style="font-size:1.8rem;font-weight:800;font-family:var(--font-display);color:#FBBF24;">@enAttente</div>
+                    <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--color-surface-400);">En attente</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="glass-panel p-3 text-center" style="border-top:2px solid #34D399;">
+                    <div style="font-size:1.8rem;font-weight:800;font-family:var(--font-display);color:#34D399;">@validees</div>
+                    <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--color-surface-400);">Validees</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="glass-panel p-3 text-center" style="border-top:2px solid #A78BFA;">
+                    <div style="font-size:1.3rem;font-weight:800;font-family:var(--font-display);color:#A78BFA;">@total.ToString("N0")</div>
+                    <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--color-surface-400);">MAD payes</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cards list -->
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+        @foreach (var loc in Model)
+        {
+            string sb = loc.Statut is "En attente" ? "badge-attente" :
+                        loc.Statut is "Validee" or "Validée" ? "badge-validee" : "badge-refusee";
+            string statusIcon = loc.Statut is "En attente" ? "fa-clock" :
+                                loc.Statut is "Validee" or "Validée" ? "fa-circle-check" : "fa-circle-xmark";
+            int jours = Math.Max(1,(int)Math.Ceiling((loc.DateFin - loc.DateDebut).TotalDays));
+            <div class="glass-panel" style="padding:1.5rem;transition:box-shadow .2s ease;" onmouseover="this.style.boxShadow='0 12px 40px rgba(0,0,0,.5)'" onmouseout="this.style.boxShadow=''">
+                <div class="row align-items-center g-3">
+                    <!-- Image -->
+                    <div class="col-auto">
+                        <div style="width:80px;height:60px;border-radius:10px;overflow:hidden;background:var(--color-surface-900);flex-shrink:0;">
+                            @if (!string.IsNullOrEmpty(loc.Voiture?.ImageUrl))
+                            {
+                                <img src="@loc.Voiture.ImageUrl" alt="@loc.Voiture.Marque" style="width:100%;height:100%;object-fit:cover;" />
+                            }
+                            else
+                            {
+                                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+                                    <i class="fa-solid fa-car text-muted opacity-50"></i>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <!-- Info -->
+                    <div class="col">
+                        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-bottom:.25rem;">
+                            <span style="font-family:var(--font-display);font-size:1.05rem;font-weight:700;color:#fff;">
+                                @loc.Voiture?.Marque @loc.Voiture?.Modele
+                            </span>
+                            <span class="badge @sb">
+                                <i class="fa-solid @statusIcon me-1"></i>@loc.Statut
+                            </span>
+                        </div>
+                        <div style="display:flex;flex-wrap:wrap;gap:1rem;font-size:.82rem;color:var(--color-surface-400);">
+                            <span><i class="fa-regular fa-calendar me-1" style="color:var(--color-primary-500);"></i>@loc.DateDebut.ToString("dd/MM/yyyy") → @loc.DateFin.ToString("dd/MM/yyyy")</span>
+                            <span><i class="fa-regular fa-clock me-1" style="color:var(--color-primary-500);"></i>@jours jour@(jours > 1 ? "s" : "")</span>
+                            <span><i class="fa-solid fa-tag me-1" style="color:var(--color-primary-500);"></i>Ref. #@loc.Id</span>
+                        </div>
+                    </div>
+                    <!-- Prix -->
+                    <div class="col-auto text-end">
+                        <div style="font-family:var(--font-display);font-size:1.4rem;font-weight:700;" class="text-gradient">
+                            @loc.MontantTotal.ToString("N0")
+                        </div>
+                        <div style="font-size:.75rem;color:var(--color-surface-400);">MAD TTC</div>
+                    </div>
+                </div>
+
+                @if (loc.Statut is "Validee" or "Validée")
+                {
+                    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.04);">
+                        <div style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.15);border-radius:8px;padding:.6rem 1rem;font-size:.82rem;color:#6EE7B7;display:flex;align-items:center;gap:.5rem;">
+                            <i class="fa-solid fa-circle-check"></i>
+                            Votre reservation est confirmee ! Presentez-vous a l'agence le @loc.DateDebut.ToString("dd/MM/yyyy").
+                        </div>
+                    </div>
+                }
+                @if (loc.Statut is "Refusee" or "Refusée")
+                {
+                    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.04);">
+                        <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.15);border-radius:8px;padding:.6rem 1rem;font-size:.82rem;color:#FCA5A5;display:flex;align-items:center;gap:.5rem;">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                            Demande refusee. Vous pouvez reserver un autre vehicule.
+                            <a asp-controller="Home" asp-action="Index" style="color:#93C5FD;margin-left:.5rem;font-weight:600;">Voir la flotte →</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        </div>
+    }
+
+</div>
+</div>

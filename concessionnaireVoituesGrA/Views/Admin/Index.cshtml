@@ -1,0 +1,150 @@
+﻿@model IEnumerable<concessionnaireVoituesGrA.Models.VoitureDto>
+@{
+    ViewData["Title"] = "Dashboard Admin";
+    var demandes = ViewBag.Demandes as IEnumerable<concessionnaireVoituesGrA.Domains.Location> ?? Enumerable.Empty<concessionnaireVoituesGrA.Domains.Location>();
+    int totalDemandes = (int)(ViewBag.TotalDemandes ?? 0);
+    int enAttente    = (int)(ViewBag.DemandesEnAttente ?? 0);
+    int validees     = (int)(ViewBag.DemandesValidees  ?? 0);
+    double revenus   = (double)(ViewBag.RevenusTotal   ?? 0.0);
+    int dispo        = (int)(ViewBag.VoitureDispo      ?? 0);
+    int louee        = (int)(ViewBag.VoitureLouee      ?? 0);
+}
+
+<div style="padding:2.5rem 0;">
+<div class="container-fluid" style="max-width:1400px;padding:0 2rem;">
+
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-4 mb-5">
+        <div>
+            <div class="section-tag"><i class="fa-solid fa-gauge-high"></i> Administration</div>
+            <h1 style="font-family:var(--font-display);font-size:2.2rem;font-weight:800;margin:0;color:#fff;">
+                Dashboard <span class="text-gradient">Admin</span>
+            </h1>
+            <p class="text-muted mt-1 mb-0">Vue en temps reel de votre concession.</p>
+        </div>
+        <a asp-controller="Voitures" asp-action="Create" class="btn-primary" style="font-size:.9rem;padding:.6rem 1.25rem;">
+            <i class="fa-solid fa-plus"></i> Ajouter vehicule
+        </a>
+    </div>
+
+    <!-- KPI Row -->
+    <div class="row g-4 mb-5">
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="glass-panel p-4 text-center" style="border-top:3px solid var(--color-primary-600);">
+                <div style="font-size:2rem;font-weight:800;font-family:var(--font-display);color:#fff;">@totalDemandes</div>
+                <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--color-surface-400);margin-top:4px;">Total demandes</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="glass-panel p-4 text-center" style="border-top:3px solid #FBBF24;">
+                <div style="font-size:2rem;font-weight:800;font-family:var(--font-display);color:#FBBF24;">@enAttente</div>
+                <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--color-surface-400);margin-top:4px;">En attente</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="glass-panel p-4 text-center" style="border-top:3px solid #34D399;">
+                <div style="font-size:2rem;font-weight:800;font-family:var(--font-display);color:#34D399;">@validees</div>
+                <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--color-surface-400);margin-top:4px;">Validees</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="glass-panel p-4 text-center" style="border-top:3px solid #A78BFA;">
+                <div style="font-size:1.3rem;font-weight:800;font-family:var(--font-display);color:#A78BFA;">@revenus.ToString("N0")</div>
+                <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--color-surface-400);margin-top:4px;">Revenus MAD</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="glass-panel p-4 text-center" style="border-top:3px solid #34D399;">
+                <div style="font-size:2rem;font-weight:800;font-family:var(--font-display);color:#34D399;">@dispo</div>
+                <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--color-surface-400);margin-top:4px;">Disponibles</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="glass-panel p-4 text-center" style="border-top:3px solid #FBBF24;">
+                <div style="font-size:2rem;font-weight:800;font-family:var(--font-display);color:#FBBF24;">@louee</div>
+                <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--color-surface-400);margin-top:4px;">Louees</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demandes Table -->
+    <div class="glass-panel mb-5">
+        <div class="d-flex align-items-center gap-3 p-4 pb-3" style="border-bottom:1px solid rgba(255,255,255,0.04);">
+            <div style="width:40px;height:40px;background:rgba(37,99,235,.12);border:1px solid rgba(37,99,235,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                <i class="fa-solid fa-bell" style="color:var(--color-primary-400);"></i>
+            </div>
+            <div>
+                <h2 style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;margin:0;color:#fff;">Demandes de Reservation</h2>
+                <p style="font-size:.78rem;color:var(--color-surface-400);margin:0;">@enAttente en attente de traitement</p>
+            </div>
+        </div>
+        <div class="p-4" style="overflow-x:auto;">
+            @if (!demandes.Any())
+            {
+                <div class="text-center py-5">
+                    <i class="fa-solid fa-inbox fa-3x" style="color:var(--color-surface-600);margin-bottom:1rem;display:block;"></i>
+                    <p class="text-muted">Aucune demande pour le moment.</p>
+                </div>
+            }
+            else
+            {
+                <table class="table table-hover" style="min-width:900px;">
+                    <thead><tr>
+                        <th>#</th><th>Client</th><th>Vehicule</th>
+                        <th>Debut</th><th>Fin</th><th>Duree</th>
+                        <th>Montant</th><th>Statut</th><th style="text-align:center;">Actions</th>
+                    </tr></thead>
+                    <tbody>
+                    @foreach (var d in demandes)
+                    {
+                        string sb = d.Statut is "En attente" ? "badge-attente" : d.Statut is "Validee" or "Validée" ? "badge-validee" : "badge-refusee";
+                        int jours = Math.Max(1,(int)Math.Ceiling((d.DateFin - d.DateDebut).TotalDays));
+                        <tr>
+                            <td style="color:var(--color-surface-500);font-size:.8rem;">#@d.Id</td>
+                            <td>
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--color-primary-600),#7C3AED);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:#fff;">
+                                        @(d.Client?.Nom?.Substring(0,1).ToUpper() ?? "?")
+                                    </div>
+                                    <span style="font-weight:500;">@d.Client?.Nom</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="font-weight:600;">@d.Voiture?.Marque @d.Voiture?.Modele</div>
+                                <div style="font-size:.75rem;color:var(--color-surface-400);">@d.Voiture?.Matricule</div>
+                            </td>
+                            <td style="font-size:.85rem;">@d.DateDebut.ToString("dd/MM/yyyy")</td>
+                            <td style="font-size:.85rem;">@d.DateFin.ToString("dd/MM/yyyy")</td>
+                            <td><span style="color:var(--color-surface-300);font-size:.85rem;">@jours j</span></td>
+                            <td><span style="font-weight:700;color:#fff;">@d.MontantTotal.ToString("N0") <small style="color:var(--color-surface-400);font-weight:400;">MAD</small></span></td>
+                            <td><span class="badge @sb">@d.Statut</span></td>
+                            <td style="text-align:center;">
+                                @if (d.Statut == "En attente")
+                                {
+                                    <div style="display:flex;gap:6px;justify-content:center;">
+                                        <form asp-action="ValiderDemande" asp-route-id="@d.Id" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn-success" onclick="return confirm('Valider ?')" style="padding:.35rem .8rem;font-size:.78rem;">
+                                                <i class="fa-solid fa-check"></i> Valider
+                                            </button>
+                                        </form>
+                                        <form asp-action="RefuserDemande" asp-route-id="@d.Id" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn-danger" onclick="return confirm('Refuser ?')" style="padding:.35rem .8rem;font-size:.78rem;">
+                                                <i class="fa-solid fa-xmark"></i> Refuser
+                                            </button>
+                                        </form>
+                                    </div>
+                                }
+                                else { <span style="font-size:.78rem;color:var(--color-surface-600);">Traite</span> }
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+
+</div>
+</div>

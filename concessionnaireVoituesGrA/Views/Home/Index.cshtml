@@ -1,0 +1,247 @@
+@model IEnumerable<concessionnaireVoituesGrA.Models.VoitureDto>
+
+@{
+    ViewData["Title"] = "Location de Voitures Premium au Maroc";
+}
+
+<!-- ===================================================
+     HERO SECTION - FULL-SCREEN IMMERSIVE
+     =================================================== -->
+<section class="hero-section">
+    <div class="hero-bg">
+        <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1920&q=90&auto=format&fit=crop" 
+             alt="Voiture de luxe sur route" loading="eager" />
+    </div>
+
+    <div class="container py-5">
+        <div class="row align-items-center g-5">
+
+            <!-- Center: Copy -->
+            <div class="col-lg-8 mx-auto text-center hero-content">
+                <div class="hero-tag mx-auto">
+                    <i class="fa-solid fa-bolt"></i>
+                    Location Premium · Maroc
+                </div>
+                <h1 class="hero-title">
+                    Conduisez <span class="text-gradient">l'Excellence</span>,<br>
+                    Partout au Maroc.
+                </h1>
+                <p class="hero-subtitle mx-auto">
+                    Une flotte de véhicules premium sélectionnés pour votre confort. 
+                    Réservez en 60 secondes, récupérez votre voiture où vous êtes.
+                </p>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a href="#catalogue" class="btn-primary" style="font-size:1rem; padding: 0.9rem 2rem;">
+                        <i class="fa-solid fa-car-side"></i> Voir la Flotte
+                    </a>
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <a asp-controller="Comptes" asp-action="Creer" class="btn-secondary" style="font-size:1rem; padding: 0.9rem 2rem;">
+                            <i class="fa-regular fa-user"></i> Créer un compte
+                        </a>
+                    }
+                </div>
+
+                <!-- Stats -->
+                <div class="hero-stats justify-content-center">
+                    <div>
+                        <div class="hero-stat-number text-gradient">@Model.Count()</div>
+                        <div class="hero-stat-label">Véhicules</div>
+                    </div>
+                    <div style="width:1px; background:rgba(255,255,255,0.1);"></div>
+                    <div>
+                        <div class="hero-stat-number text-gradient">@Model.Count(v => string.IsNullOrEmpty(v.EtatDisponibilite) || v.EtatDisponibilite == "Disponible")</div>
+                        <div class="hero-stat-label">Disponibles</div>
+                    </div>
+                    <div style="width:1px; background:rgba(255,255,255,0.1);"></div>
+                    <div>
+                        <div class="hero-stat-number text-gradient">100%</div>
+                        <div class="hero-stat-label">Satisfaits</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ===================================================
+     FEATURES STRIP
+     =================================================== -->
+<section style="background: var(--color-surface-800); border-top: 1px solid rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.04);">
+    <div class="container py-4">
+        <div class="row g-4 text-center">
+            <div class="col-6 col-md-3">
+                <div class="d-flex flex-column align-items-center gap-2">
+                    <div style="width:44px; height:44px; background:rgba(37,99,235,0.12); border:1px solid rgba(37,99,235,0.2); border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center;">
+                        <i class="fa-solid fa-bolt" style="color:var(--color-primary-400); font-size:1.1rem;"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight:600; font-size:0.9rem; color:#fff;">Réservation Instant</div>
+                        <div style="font-size:0.78rem; color:var(--color-surface-400);">Confirmation en 60 sec</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="d-flex flex-column align-items-center gap-2">
+                    <div style="width:44px; height:44px; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.2); border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center;">
+                        <i class="fa-solid fa-shield-halved" style="color:#34D399; font-size:1.1rem;"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight:600; font-size:0.9rem; color:#fff;">Assurance Incluse</div>
+                        <div style="font-size:0.78rem; color:var(--color-surface-400);">Protection tous risques</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="d-flex flex-column align-items-center gap-2">
+                    <div style="width:44px; height:44px; background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.2); border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center;">
+                        <i class="fa-solid fa-location-arrow" style="color:#FBBF24; font-size:1.1rem;"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight:600; font-size:0.9rem; color:#fff;">Livraison à Domicile</div>
+                        <div style="font-size:0.78rem; color:var(--color-surface-400);">Casablanca & Rabat</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="d-flex flex-column align-items-center gap-2">
+                    <div style="width:44px; height:44px; background:rgba(124,58,237,0.12); border:1px solid rgba(124,58,237,0.2); border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center;">
+                        <i class="fa-solid fa-headset" style="color:#A78BFA; font-size:1.1rem;"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight:600; font-size:0.9rem; color:#fff;">Support 24/7</div>
+                        <div style="font-size:0.78rem; color:var(--color-surface-400);">Équipe disponible toujours</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================================================
+     VEHICLE CATALOGUE
+     =================================================== -->
+<section id="catalogue" style="padding: 5rem 0;">
+    <div class="container">
+
+        <!-- Header -->
+        <div class="d-flex flex-wrap justify-content-between align-items-end gap-4 mb-5">
+            <div>
+                <div class="section-tag">
+                    <i class="fa-solid fa-car-side"></i> Notre Flotte
+                </div>
+                <h2 class="section-title mb-1">Véhicules Disponibles</h2>
+                <p class="text-muted mb-0">@Model.Count() véhicules · Mis à jour en temps réel</p>
+            </div>
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-controller="Voitures" asp-action="Create" class="btn-primary">
+                    <i class="fa-solid fa-plus"></i> Ajouter un véhicule
+                </a>
+            }
+        </div>
+
+        <!-- Grid -->
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var item in Model)
+            {
+                string etat = string.IsNullOrEmpty(item.EtatDisponibilite) ? "Disponible" : item.EtatDisponibilite;
+                string badgeClass = etat == "Disponible" ? "badge-dispo" :
+                                    (etat == "Louée" || etat == "Louee" ? "badge-louee" : "badge-indispo");
+                string categorie = string.IsNullOrEmpty(item.Categorie) ? "Non spécifié" : item.Categorie;
+
+                <div class="col">
+                    <article class="car-card vehicle-card glass-panel" style="position:relative;">
+
+                        <!-- Image -->
+                        <div class="car-image-container vehicle-img-wrapper">
+                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                            {
+                                <img src="@item.ImageUrl" alt="@item.Marque @item.Modele" loading="lazy" />
+                            }
+                            else
+                            {
+                                <div class="d-flex align-items-center justify-content-center h-100" style="background: var(--color-surface-900);">
+                                    @if (categorie == "SUV") { <i class="fa-solid fa-truck-pickup fa-3x text-muted"></i> }
+                                    else { <i class="fa-solid fa-car fa-3x text-muted"></i> }
+                                </div>
+                            }
+                            <!-- Status badge overlay -->
+                            <div style="position:absolute; top:12px; right:12px; z-index:2;">
+                                <span class="badge @badgeClass">@etat</span>
+                            </div>
+                            <!-- Category overlay -->
+                            <div style="position:absolute; bottom:0; left:0; right:0; padding:1rem; background:linear-gradient(to top, rgba(8,12,20,0.9) 0%, transparent 100%);">
+                                <span style="font-size:0.75rem; color:var(--color-surface-400); text-transform:uppercase; letter-spacing:0.05em;">
+                                    <i class="fa-solid fa-tag me-1" style="color:var(--color-primary-500);"></i>@categorie
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Body -->
+                        <div class="card-body" style="padding: var(--space-5); display:flex; flex-direction:column; flex:1;">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h3 style="font-family:var(--font-display); font-size:1.15rem; font-weight:700; color:#fff; margin:0;">
+                                    @item.Marque @item.Modele
+                                </h3>
+                                <span style="font-size:0.8rem; color:var(--color-surface-500); flex-shrink:0; margin-left:8px; padding-top:2px;">@item.Annee</span>
+                            </div>
+
+                            <!-- Specs Row -->
+                            <div class="vehicle-specs">
+                                <div class="spec-item">
+                                    <i class="fa-solid fa-calendar-days"></i>
+                                    <span>@item.Annee</span>
+                                </div>
+                                <div class="spec-item">
+                                    <i class="fa-solid fa-tags"></i>
+                                    <span>@categorie</span>
+                                </div>
+                                <div class="spec-item">
+                                    <i class="fa-solid fa-gas-pump"></i>
+                                    <span>Essence</span>
+                                </div>
+                            </div>
+
+                            <!-- Price + CTA -->
+                            <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
+                                <div>
+                                    <div class="vehicle-price text-gradient">
+                                        @item.PrixLocation <span style="font-size:0.9rem; font-weight:400; -webkit-text-fill-color: var(--color-surface-400); background:none;">MAD</span>
+                                    </div>
+                                    <div style="font-size:0.75rem; color:var(--color-surface-500);">par jour, TTC</div>
+                                </div>
+
+                                @if (etat == "Disponible")
+                                {
+                                    <a asp-controller="Locations" asp-action="Create" asp-route-id="@item.Matricule" class="btn-primary" style="padding: 0.6rem 1.25rem; font-size:0.9rem;">
+                                        <i class="fa-solid fa-key"></i> Réserver
+                                    </a>
+                                }
+                                else
+                                {
+                                    <button class="btn-secondary" disabled style="padding: 0.6rem 1.25rem; font-size:0.9rem;">
+                                        <i class="fa-solid fa-ban"></i> Indisponible
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            }
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <i class="fa-solid fa-car-burst fa-4x text-muted mb-4" style="opacity:0.3;"></i>
+                <h4 style="color:var(--color-surface-400);">Aucun véhicule disponible</h4>
+                <p class="text-muted">La flotte est en cours de mise à jour. Revenez bientôt.</p>
+            </div>
+        }
+    </div>
+</section>
+
+@section Scripts {
+}
